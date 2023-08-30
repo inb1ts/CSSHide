@@ -29,20 +29,40 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     try:
+        # Setup
         output = ""
         payload_chunks = split_payload(args.payload)
-        generator = CSSGenerator(args.selectors)
+        css_gen = CSSGenerator(args.selectors)
 
-        print(generator.selectors)
-        
-        # for chunk in payload_chunks:
-        #     output += format_rgb_chunk(chunk)
+        # Output generation loop
+        counter = 0
+        queue_quad = False
+        quad = []
+        for chunk in payload_chunks:
+            if (len(quad) == 4):
+                output += css_gen.random_attrib_quad(*quad)
+                quad = []
+                queue_quad = False
+
+            if (counter == 4):
+                queue_quad = True
+                counter = 0
+
+            if (queue_quad):
+                quad.append(css_gen.format_rgb_chunk(chunk))
+            else:
+                rbg_color = css_gen.format_rgb_chunk(chunk)
+                output += css_gen.random_attrib_singular(rbg_color)
+                counter += 1
 
     except Exception as err:
         print(f"Error encoding payload file {args.payload}: {err}")
         sys.exit(1)
 
     print(output)
+
+
+
 
     # try:
     #     with open(args.outfile, "w") as output_file:

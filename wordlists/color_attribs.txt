@@ -1,9 +1,0 @@
-color
-background-color
-background
-border-color
-border
-box-shadow
-outline
-linear-gradient
-radial-gradient
