@@ -2,6 +2,7 @@
 
 import argparse
 import sys
+import random
 
 from css_gen import CSSGenerator
 
@@ -28,39 +29,24 @@ if __name__ == '__main__':
     parser = init_argparse()
     args = parser.parse_args()
     
+    # Setup
     try:
-        # Setup
-        output = ""
+        payload_as_variables = []
+        payload_as_random = []
         payload_chunks = split_payload(args.payload)
         css_gen = CSSGenerator(args.selectors)
-
-        # Output generation loop
-        counter = 0
-        queue_quad = False
-        quad = []
-        for chunk in payload_chunks:
-            if (len(quad) == 4):
-                output += css_gen.random_attrib_quad(*quad)
-                quad = []
-                queue_quad = False
-
-            if (counter == 4):
-                queue_quad = True
-                counter = 0
-
-            if (queue_quad):
-                quad.append(css_gen.format_rgb_chunk(chunk))
-            else:
-                rbg_color = css_gen.format_rgb_chunk(chunk)
-                output += css_gen.random_attrib_singular(rbg_color)
-                counter += 1
-
     except Exception as err:
-        print(f"Error encoding payload file {args.payload}: {err}")
+        print(f"[!] Error loading payload file {args.payload}: {err}")
         sys.exit(1)
 
-    print(output)
+    # Output generation loop
+    payload_as_variables = css_gen.gen_css_variables_attributes(payload_chunks)
+    payload_as_random = css_gen.gen_css_random_attributes(payload_chunks)
 
+    print("Payload variables:\n\n")
+    print(payload_as_variables)
+    print("Payload CSS attributes:\n\n")
+    print(payload_as_random)
 
 
 
