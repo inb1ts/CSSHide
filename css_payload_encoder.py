@@ -24,8 +24,12 @@ VARIABLE_ELEMENTS = {
 
 
 class CSSPayloadEncoder:
-    def __init__(self):
+    def __init__(self, format):
         self.elements = VARIABLE_ELEMENTS
+        if format == "rgb":
+            self.format_func = self.format_rgb_chunk
+        elif format == "hex":
+            self.format_func = self.format_hex_chunk
 
     # Random selection methods
     def random_attrib_singular(self, color) -> str:
@@ -94,9 +98,9 @@ class CSSPayloadEncoder:
                     counter = 0
 
                 if queue_quad:
-                    quad.append(self.format_rgb_chunk(chunk))
+                    quad.append(self.format_func(chunk))
                 else:
-                    rbg_color = self.format_rgb_chunk(chunk)
+                    rbg_color = self.format_func(chunk)
                     payload_as_random.append(self.random_attrib_singular(rbg_color))
                     counter += 1
 
@@ -132,7 +136,7 @@ class CSSPayloadEncoder:
                 if variable_counter >= len(variable_colors):
                     return variables_output
 
-                color = self.format_rgb_chunk(variable_colors[variable_counter])
+                color = self.format_func(variable_colors[variable_counter])
                 variables_output.append(
                     f"--{element_names[i]}-{attr_index}-color: {color}"
                 )

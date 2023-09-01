@@ -1,5 +1,5 @@
 import random
-
+import rcssmin
 
 class CSSGenerator:
     def __init__(self, selector_filename):
@@ -15,6 +15,9 @@ class CSSGenerator:
 
         css_output += self.generate_variable_block(payload_variables)
         css_output += self.generate_main_block(payload_random)
+
+        if minify:
+            css_output = rcssmin.cssmin(css_output)
 
         return css_output
 
@@ -55,8 +58,8 @@ class CSSGenerator:
                     filler_counter += 1
 
                     if filler_counter == rand_filler:
-                        for fillter_attribute in self.random_css_filler():
-                            main_block += f"\t{fillter_attribute};\n"
+                        for filler_attribute in self.random_css_filler():
+                            main_block += f"\t{filler_attribute};\n"
                             filler_counter = 0
                             rand_filler = random.randint(1, 6)
                 elif used_in_block and len(payload_random) == 0:
