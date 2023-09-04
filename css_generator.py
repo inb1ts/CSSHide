@@ -66,6 +66,7 @@ class CSSGenerator:
                     dangling_value = True
                     break
                 else:
+                    payload_random.insert(0, attribute)
                     break
 
             main_block += "}\n\n"

@@ -19,11 +19,9 @@ def init_argparse() -> argparse.ArgumentParser:
         description="CSSHide encodes a payload in CSS colour values. Supports either rbg or hex CSS colour formats, and minified/normal output.",
     )
 
+    parser.add_argument("payload", help="the payload file payload you want to encode")
     parser.add_argument(
-        "payload", help="The file containing the payload you want to encode"
-    )
-    parser.add_argument(
-        "-s", "--selectors", default="selectors.txt", help="wordlist of CSS selectors"
+        "-s", "--selectors", default="selectors.txt", help="CSS selector wordlist"
     )
     parser.add_argument(
         "-f",
