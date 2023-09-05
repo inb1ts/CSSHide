@@ -1,12 +1,20 @@
+
+<div align="center">
+
 # **CSSHide**
 
-<h1 align="center">
-<br>
+<br />
+
+`CSSHide` is a tool for encoding a payload inside a mock-CSS file using CSS colour values with the aim of blending into common network traffic - Hiding in plain style.
+
+<br />
+
 <img src=./images/CSSHide_logo.png >
 <br>
-</h1>
+</div>
+<hr />
 
-`CSSHide` is a tool for encoding a payload inside a mock-CSS file using CSS colour values - Hiding in plain style. Supports two different formats of CSS colour attribute:
+Supports two different formats of CSS colour attribute:
 
 - rgb - `rgb(1 2 3)`
 - hex - `#ffffff`
