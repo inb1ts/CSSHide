@@ -31,7 +31,7 @@ Supports two different formats of CSS colour attribute:
 - rgb - `rgb(1 2 3)`
 - hex - `#ffffff`
 
-The payload is split into 3-byte chunks and encoded into these values before being placed amongst other randomly generated CSS attributes. The output can be minified to reduce size - as is occasionally done with legitimate CSS files - or left as the default format.
+The payload is split into 3-byte chunks and encoded into these values before being placed amongst other randomly generated CSS attributes. There is an initial section of variables, as it allows us to encode a more concentrated portion of the payload straight away, before moving onto randomly-selected CSS selectors. The output can be minified to reduce size - as is occasionally done with legitimate CSS files - or left as the default format.
 
 ```
 C:\>python.exe csshide.py -h
