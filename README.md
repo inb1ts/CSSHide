@@ -85,6 +85,8 @@ An example of fetching the CSS file from a server and decoding it in C (and usin
 - **Size** - Legitimate CSS files usually aren't too large, so whilst the tool will still work with a large payload (tested with Havoc agent shellcode of 95kb), the outputted file will look comically large for a CSS file and would definitely turn some heads. 
 - **Limited selection of CSS properties and values** - The randomised CSS properties and values are pulled from a hardcoded list that does not encompass all possible CSS properties.
 - **Can't currently blend between `rgb` and `hex` formats** - It's one or the other at the moment.
+- **Doesn't currently utilise the alpha component of the `rgb` colour format**
+- **Predictably starts with the `root:` variable section, but would preferably randomise more elements at the start of the file such as font inclusions**
 
 ## **Resources/Credits**
 
