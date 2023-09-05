@@ -21,6 +21,7 @@
 ```
 C:\> git clone https://github.com/inb1ts/CSSHide.git
 C:\> cd CSSHide
+C:\> pip install rcssmin
 C:\> python .\csshide.py --help
 ```
 
