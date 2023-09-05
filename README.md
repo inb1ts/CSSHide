@@ -1,4 +1,3 @@
-
 <div align="center">
 
 # **CSSHide**
@@ -11,18 +10,11 @@
 
 <img src=./images/CSSHide_logo.png >
 <br>
-</div>
-<hr />
-
-Supports two different formats of CSS colour attribute:
-
-- rgb - `rgb(1 2 3)`
-- hex - `#ffffff`
-
-The payload is split into 3-byte chunks and encoded into these values before being placed amongst other randomly generated CSS attributes. The output can be minified to reduce size - as is occasionally done with legitimate CSS files - or left as the default format.
-
 
 [![Twitter inbits_sec](https://badgen.net/badge/icon/twitter?icon=twitter&label)](https://twitter.com/inbits_sec)
+
+</div>
+<hr />
 
 ## **Installation**
 
@@ -33,6 +25,13 @@ C:\> python .\csshide.py --help
 ```
 
 ## **Usage**
+
+Supports two different formats of CSS colour attribute:
+
+- rgb - `rgb(1 2 3)`
+- hex - `#ffffff`
+
+The payload is split into 3-byte chunks and encoded into these values before being placed amongst other randomly generated CSS attributes. The output can be minified to reduce size - as is occasionally done with legitimate CSS files - or left as the default format.
 
 ```
 C:\>python.exe csshide.py -h
@@ -57,6 +56,29 @@ options:
 ```
 
 An example of fetching the CSS file from a server and decoding it in C (and using the WinAPI) can be found in the `example_decode` directory.
+
+## **Example output**
+
+#### Minified rgb
+
+- `csshide.py calc.bin`
+
+![minified rgb](images/csshide_example_rgb_minified.png)
+
+#### Non-minified rbg
+- `csshide.py calc.bin --no-minify`
+
+![no-minify rgb](images/csshide_example_rbg_nominify.png)
+
+#### Minified hex
+- `csshide.py calc.bin -f hex`
+
+![minified hex](images/csshide_example_hex_minified.png)
+
+#### Non-minified hex
+- `csshide.py calc.bin -f hex --no-minify`
+
+![no-minify hex](images/csshide_example_hex_nominify.png)
 
 ## **Limitations**
 
