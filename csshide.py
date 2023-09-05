@@ -15,7 +15,7 @@ def split_payload(file_name):
 
 def init_argparse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        usage="%(prog)s [PAYLOAD_FILE] [ARGS]",
+        usage="%(prog)s PAYLOAD_FILE [-h] [-f {rgb, hex}] [--no-minify] [-o OUT_FILE]",
         description="CSSHide encodes a payload in CSS colour values. Supports either rbg or hex CSS colour formats, and minified/normal output.",
     )
 
