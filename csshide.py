@@ -3,8 +3,8 @@
 import argparse
 import sys
 
-from css_payload_encoder import CSSPayloadEncoder
-from css_generator import CSSGenerator
+from csshide.css_payload_encoder import CSSPayloadEncoder
+from csshide.css_generator import CSSGenerator
 
 
 def split_payload(file_name):
