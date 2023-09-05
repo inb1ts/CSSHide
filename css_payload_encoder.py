@@ -1,5 +1,6 @@
 import random
 import sys
+import pdb
 
 VARIABLE_ELEMENTS = {
     "main": ["fg", "bg"],
@@ -56,7 +57,7 @@ class CSSPayloadEncoder:
 
         # Pad the chunk to 3 if it's the last one
         if len(vals) < 3:
-            vals += ["0"] * (3 - len[vals])
+            vals.extend(["0"] * (3 - len(vals)))
 
         return f"rgb({vals[0]} {vals[1]} {vals[2]})"
 
@@ -105,7 +106,7 @@ class CSSPayloadEncoder:
                     counter += 1
 
             # Handle chunks running out whilst queuing a quad
-            if queue_quad and len(quad) != 0:
+            if queue_quad and (len(quad) != 0):
                 for color in quad:
                     payload_as_random.append(self.random_attrib_singular(color))
 

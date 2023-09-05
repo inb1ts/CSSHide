@@ -1,5 +1,6 @@
 import random
 import rcssmin
+import string
 
 class CSSGenerator:
     def __init__(self, selector_filename):
@@ -39,6 +40,9 @@ class CSSGenerator:
         rand_filler = random.randint(3, 6)
 
         while payload_random:
+            if (selector_index >= len(self.selectors)):
+                self._generate_extra_selectors()
+
             main_block += f"{self.selectors[selector_index]} {{\n"
 
             # Add multiple encoded attributes, check start of previous attributes to
@@ -66,6 +70,7 @@ class CSSGenerator:
                     dangling_value = True
                     break
                 else:
+                    # Add it back to the queue to be used in the next block
                     payload_random.insert(0, attribute)
                     break
 
@@ -183,3 +188,13 @@ class CSSGenerator:
             f"border-width: {px_width}px",
             f"border-style: {style}",
         ]
+
+    # Should only be needed for huge payloads
+    def _generate_extra_selectors(self):
+        randomstr_selectors = []
+        random_suffix = ''.join([random.choice(string.ascii_lowercase) for _ in range(4)])
+
+        for selector in self.selectors:
+            randomstr_selectors.append(f"{selector}-{random_suffix}")
+
+        self.selectors += randomstr_selectors

