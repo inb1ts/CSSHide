@@ -110,7 +110,7 @@ int main(void) {
     }
 
 
-    // Uncomment and comment above to use Hex version    
+    // Uncomment and comment below to use Hex version    
     // if (!DecodeCssHex(encodedPayloadBuf, fileSize.LowPart, &decodedPayload, &decodedPayloadSize)) {
     //     printf("[!] Error decoding CSS payload\n");
     //     goto _EndOfFunc;
